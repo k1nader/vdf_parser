@@ -9,7 +9,7 @@ type
   TVDFParser = class(TObject)
   private
     FSourceText: string;
-    FJsonTest: string;
+    FJsonText: string;
     procedure Check(AString: string);
   public
     constructor Create;
@@ -17,7 +17,7 @@ type
     procedure LoadFormStream(Stream: TMemoryStream);
     procedure Parser(AString: string);
     property Text: string read FSourceText;
-    property Json: string read FJsonTest;
+    property Json: string read FJsonText;
   end;
 
 implementation
@@ -187,7 +187,7 @@ begin
 
   end;
 
-  FJsonTest := ARootJson.AsJSon(True, True);
+  FJsonText := ARootJson.AsJSon(True, True);
 
 end;
 
