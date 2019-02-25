@@ -42,6 +42,7 @@
 				<Form>Form1</Form>
 			</DCCReference>
 			<DCCReference Include="..\uVDFParser.pas"/>
+			<DCCReference Include="..\..\PT_Client_6.0_Source\librarys\superobject\superobject.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
