@@ -1,16 +1,62 @@
 program Project1;
 
-uses
-  Forms,
-  Unit1 in 'Unit1.pas' {Form1},
-  uVDFParser in '..\uVDFParser.pas',
-  superobject in '..\..\PT_Client_6.0_Source\librarys\superobject\superobject.pas';
-
+{$APPTYPE CONSOLE}
 {$R *.res}
 
+uses
+  System.SysUtils,
+  uVDFParser in '..\uVDFParser.pas';
+
+procedure PrintNode(Node: TVDFNode; const Indent: string);
+var
+  i: Integer;
+  Child: TVDFNode;
+  HasChildren: Boolean;
 begin
-  Application.Initialize;
-  Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TForm1, Form1);
-  Application.Run;
+  if Node = nil then
+    Exit;
+
+  HasChildren := Node.Children.Count > 0;
+
+  // 只打印有名字的节点（匿名节点会被跳过显示）
+  if Node.Name <> '' then
+  begin
+    if HasChildren then
+      Writeln(Indent, Node.Name, ':')
+    else
+      Writeln(Indent, Node.Name, ' = ', Node.Value);
+  end;
+
+  for i := 0 to Node.Children.Count - 1 do
+  begin
+    Child := TVDFNode(Node.Children[i]);
+    PrintNode(Child, Indent + '  ');
+  end;
+end;
+
+var
+  Parser: TVDFParser;
+  i: Integer;
+  fname: string;
+
+begin
+  try
+    Parser := TVDFParser.Create;
+    try
+      fname := 'F:\shared\gamedata\config.txt';
+      Parser.LoadFromFile(fname, TEncoding.UTF8);
+
+      for i := 0 to Parser.Root.Children.Count - 1 do
+        PrintNode(TVDFNode(Parser.Root.Children[i]), '');
+
+    finally
+      Parser.Free;
+    end;
+
+    Readln;
+  except
+    on E: Exception do
+      Writeln('Error: ', E.ClassName, ': ', E.Message);
+  end;
+
 end.
